@@ -6,4 +6,8 @@ return {
         RoundStartDelay = 5,
         RoundEndDelay = 5,
     },
+    Choices = {
+        Flash = {},
+        MrFreeze = {},
+    },
 }

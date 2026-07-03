@@ -1,5 +1,7 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
+local TeamService = require(script.Parent.TeamService)
 local GameConfig = require(ReplicatedStorage.Shared.Configs.GameConfig)
 
 local states = {
@@ -11,8 +13,20 @@ local states = {
 
 local roundConfig = GameConfig.RoundConfig
 local state = "Intermission"
+local redPad = workspace:WaitForChild("RedPad")
+local bluePad = workspace:WaitForChild("BluePad")
 
 local RoundService = {}
+
+--[[METHODS]]
+local function bindPadTouch(pad, teamName)
+    pad.Touched:Connect(function(hit)
+        local player = Players:GetPlayerFromCharacter(hit.Parent)
+        if player then
+            TeamService.SetPlayersTeam(player, teamName)
+        end
+    end)
+end
 
 function RoundService.GetState()
     return state
@@ -30,6 +44,7 @@ function RoundService.IsState(checkState)
     return state == checkState
 end
 
+--[[ROUND FLOW]]
 function RoundService.Intermission()
     RoundService.SetState(states.Intermission)
 
@@ -62,7 +77,11 @@ function RoundService.CleanUp()
     RoundService.Intermission()
 end
 
+--[[INIT]]
 function RoundService.Init()
+    bindPadTouch(redPad, "Red")
+    bindPadTouch(bluePad, "Blue")
+
     task.spawn(function()
         RoundService.Intermission()
     end)
