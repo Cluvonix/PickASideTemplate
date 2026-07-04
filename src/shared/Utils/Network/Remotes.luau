@@ -1,7 +1,6 @@
 return {
 	Remotes = {
-		"UpdateCash",
-		"EquipTool",
+		"InvisPlayer",
 	},
 	RemoteFunctions = {
 		"GetMouse",
