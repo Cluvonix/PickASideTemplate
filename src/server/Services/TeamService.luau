@@ -24,7 +24,6 @@ local playerTeams: { [number]: TeamName } = {}
 local function changeTeamGui(player: Player, teamName: TeamName)
 	local playerHead = player.Character and player.Character:FindFirstChild("Head")
 	local teamGui = playerHead and playerHead:FindFirstChild("TeamGui")
-    print("ur mama")
 	if not teamGui then
 		teamGui = uiAssets:FindFirstChild("TeamGui"):Clone()
 		if playerHead then

@@ -1,10 +1,8 @@
 return {
     RoundConfig = {
-        IntermissionTime = 10,
+        IntermissionTime = 5,
         ChooseSideTime = 15,
-        RoundTime = 60,
-        RoundStartDelay = 5,
-        RoundEndDelay = 5,
+        ActiveTime = 60,
     },
     Choices = {
         Flash = {},
