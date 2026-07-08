@@ -24,13 +24,10 @@ local RoundService = {}
 --[[METHODS]]
 local function bindPadTouch(pad, teamName)
 	pad.Touched:Connect(function(hit)
-        local character = hit.Parent
+		local character = hit.Parent
 		local player = Players:GetPlayerFromCharacter(character)
-		if player then
+		if player and RoundService.IsState(states.ChooseSide) then
 			TeamService.SetPlayersTeam(player, teamName)
-
-			local waitPad = teamName == "Red" and redChosenPad or blueChosenPad
-            character:PivotTo(waitPad:GetPivot())
 		end
 	end)
 end
@@ -42,6 +39,7 @@ end
 function RoundService.SetState(newState)
 	if states[newState] then
 		state = newState
+		print("State changed to:", newState)
 	else
 		warn("Invalid state: " .. tostring(newState))
 	end
@@ -56,8 +54,6 @@ function RoundService.Intermission()
 	RoundService.SetState(states.Intermission)
 
 	task.wait(roundConfig.IntermissionTime)
-
-	RoundService.ChooseSide()
 end
 
 function RoundService.ChooseSide()
@@ -67,23 +63,18 @@ function RoundService.ChooseSide()
 	task.wait(roundConfig.ChooseSideTime)
 
 	Network:FireAllClients("InvisPlayer", Players:GetChildren(), false)
-	RoundService.StartRound()
 end
 
 function RoundService.StartRound()
 	RoundService.SetState(states.Active)
 
 	task.wait(roundConfig.RoundTime)
-
-	RoundService.CleanUp()
 end
 
 function RoundService.CleanUp()
 	RoundService.SetState(states.Finished)
 
 	task.wait(roundConfig.RoundEndDelay)
-
-	RoundService.Intermission()
 end
 
 --[[INIT]]
@@ -92,6 +83,10 @@ function RoundService.Init()
 	bindPadTouch(bluePad, "Blue")
 
 	task.spawn(function()
+		RoundService.Intermission()
+		RoundService.ChooseSide()
+		RoundService.StartRound()
+		RoundService.CleanUp()
 		RoundService.Intermission()
 	end)
 end
